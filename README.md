@@ -56,9 +56,9 @@ This project is designed for educational and experimental purposes. Make sure yo
 
 # Pompe de Relevage - Résumé de Fonctionnement
 
-lorsque j'ai acheté ma maison, il y avait une pompe d'origine, a force de panne et après avoir constaté la presence de boue et de H2S en forte quantité, je me suis lancé dans ce projet. La gaine des cable etais rongeait pas l'H2S et le corps de pompe aui netait pas submergé très attaqué par de la rouille.
+lorsque j'ai acheté ma maison, il y avait une pompe de relevage, à force de panne et après avoir constaté la présence de boue et de H2S en forte quantité, je me suis lancé dans ce projet. La gaine des cables etait rongé par l'H2S et le corps de pompe qui n'était pas submergé très attaqué par de la rouille.
 
- je suis passé à cette gestion par esp32, je n'etais pas satisfait de ce qui existait. trop chère , pas de configuration possible. Cela a servi une fois lorsque des cheveux ont commencé a entouré le joint tournant du stator, j'ai pu depanner avant que cela soit trop tard, et ce n'est jamais glamour ce genre de panne non prévu. et c'est très instructif ce genre de projet. J'ai un arduino en production avec un RPI pour la partie wifi, je vais basculé tout sur un ESP32, voici mon projet. je ne suis pas programmeur de metier, pardonné mes erreur et monstruosité.
+ je suis passé à cette gestion par esp32, je n'etais pas satisfait de ce qui existait. trop chère , pas de configuration possible. Cela a servi une fois lorsque des cheveux ont commencé a entourer le joint tournant du stator, j'ai pu depanner avant que cela soit trop tard, et ce n'est jamais glamour ce genre de panne non prévu. et c'est très instructif ce genre de projet. J'ai un arduino en production avec un RPI pour la partie wifi, je vais basculé tout cela sur un ESP32, voici mon projet. je ne suis pas programmeur de metier, pardonné mes erreur et monstruosité. j'ai fait le choix de n'avoir qu'un seul fichier pour qu'un debutant puisse le compiler sans peine
 
 Ce projet consiste en la création d'un système de contrôle pour une pompe de relevage. L'objectif est de surveiller le fonctionnement de la pompe, enregistrer les temps de fonctionnement réel, les intervalles entre les démarrages et afficher ces informations sous forme de tableau via une interface web. et aussi :
 - de limité la presence de gaz H2S et d'odeur
