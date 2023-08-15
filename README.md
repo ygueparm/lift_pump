@@ -1,4 +1,5 @@
 # Lift Pump - Summary of Operation
+en francais à la fin
 
 When I bought my house, there was an original pump, but after many breakdowns and having noticed the presence of mud and H2S in large quantities, I embarked on this project. The cable sheathing was being eaten away by the H2S and the pump body, which was not submerged, was very badly attacked by rust.
 
@@ -52,3 +53,59 @@ until reset by the user via the web interface.
 ## Note
 
 This project is designed for educational and experimental purposes. Make sure you take all the necessary precautions when handling electrical equipment.
+
+# Pompe de Relevage - Résumé de Fonctionnement
+
+lorsque j'ai acheté ma maison, il y avait une pompe d'origine, a force de panne et après avoir constaté la presence de boue et de H2S en forte quantité, je me suis lancé dans ce projet. La gaine des cable etais rongeait pas l'H2S et le corps de pompe aui netait pas submergé très attaqué par de la rouille.
+
+ je suis passé à cette gestion par esp32, je n'etais pas satisfait de ce qui existait. trop chère , pas de configuration possible. Cela a servi une fois lorsque des cheveux ont commencé a entouré le joint tournant du stator, j'ai pu depanner avant que cela soit trop tard, et ce n'est jamais glamour ce genre de panne non prévu. et c'est très instructif ce genre de projet. J'ai un arduino en production avec un RPI pour la partie wifi, je vais basculé tout sur un ESP32, voici mon projet. je ne suis pas programmeur de metier, pardonné mes erreur et monstruosité.
+
+Ce projet consiste en la création d'un système de contrôle pour une pompe de relevage. L'objectif est de surveiller le fonctionnement de la pompe, enregistrer les temps de fonctionnement réel, les intervalles entre les démarrages et afficher ces informations sous forme de tableau via une interface web. et aussi :
+- de limité la presence de gaz H2S et d'odeur
+- d'utiliser pleinement la capacité du reservoir
+- de proteger la pompe très en amont des problemes existant, cheveux sur le rotor, rotor bloqué, capteur bloqué et de ne pas griller son moteur
+
+## Fonctionnalités
+
+- Démarrage automatique de la pompe lorsque le capteur de niveau haut est activé.
+- Arrêt automatique de la pompe après un certain temps de fonctionnement.
+- Enregistrement des temps de fonctionnement réel et des intervalles entre les démarrages.
+- Interface web permettant d'afficher les derniers fonctionnements de la pompe.
+- Mise en place d'une sécurité pour détecter un blocage éventuel du capteur de niveau haut.
+
+## Composants Utilisés
+
+- Microcontrôleur : ESP32
+- Capteur de niveau haut : Interrupteur à flotteur en acier inoxydable, capteur de niveau d'eau liquide, interrupteur à flotteur à Double bille, reed
+- Relais de sécurité : Relais pour couper l'alimentation de la pompe en cas de besoin, de type :
+    K8DT-AW2CD Relais de surveillance de courant
+Omron
+
+RM35JA32MW Relais de surveillance de courant, 
+schneider electrique
+
+GRI8-03/04 Sur courant ou sous courant
+GEYA
+- Interface Web : Utilisation d'AsyncWebServer pour afficher le tableau des derniers fonctionnements, en mode AP et possibilité de configurer les temps de pompage avec un téléphone
+
+## Fonctionnement
+
+1. Le microcontrôleur ESP32 surveille en permanence l'état du capteur de niveau haut.
+2. Lorsque le capteur de niveau haut est activé  la pompe démarre automatiquement.
+3. La pompe fonctionne pendant un temps défini (par exemple, 10 secondes) avant de s'arrêter automatiquement. a configurer dans l'interface web
+4. Les temps de fonctionnement réel et les intervalles entre les démarrages sont enregistrés dans des tableaux. accessible par telephone
+5. Une interface web permet d'afficher les derniers fonctionnements de la pompe sous forme de tableau.
+6. En cas de blocage du capteur de niveau haut après le démarrage, le relais de sécurité est activé pour couper l'alimentation de la pompe.
+jusqu'a un rearmement de l'utilisateur par l'interface web
+7. se connecter au wifi pompe_relevage , entrer le nom : pomperelevage dans la barre d'adresse pour acceder au site
+
+## Configuration
+
+- Assurez-vous de configurer les constantes appropriées dans le code, telles que les temps de fonctionnement et les broches utilisées.
+- Assurez-vous de disposer des bibliothèques nécessaires, telles que WiFi, DNSServer et AsyncWebServer. pour pouvoir compiler
+- j'ai fait le choix de tout mettre dans un seul fichier pour simplifier la compilation pour des novices avec la gui arduino-1.8.19
+
+## Remarque
+
+Ce projet est conçu à des fins éducatives et expérimentales. Assurez-vous de prendre toutes les précautions nécessaires lors de la manipulation d'appareils électriques.
+
