@@ -10,7 +10,7 @@ This project consists of creating a control system for a lift pump. The aim is t
 - make full use of tank capacity
 - protect the pump well in advance from existing problems, hair on the rotor, blocked rotor, blocked sensor and avoid burning out the motor.
 
-<img src="https://github.com/ygueparm/lift_pump/blob/main/screenshot.jpg" alt="screen shoot" width="300">
+<img src="https://github.com/ygueparm/lift_pump/blob/main/screenshot.jpg" alt="screen shoot" width="100">
 
 ## Features
 
