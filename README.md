@@ -66,6 +66,7 @@ Ce projet consiste en la création d'un système de contrôle pour une pompe de 
 - de limité la presence de gaz H2S et d'odeur
 - d'utiliser pleinement la capacité du reservoir
 - de proteger la pompe très en amont des problemes existant, cheveux sur le rotor, rotor bloqué, capteur bloqué et de ne pas griller son moteur
+<img src="https://github.com/ygueparm/lift_pump/blob/main/screenshot.jpg" alt="screen shoot" width="300">
 
 ## Fonctionnalités
 
