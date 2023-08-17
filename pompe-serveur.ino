@@ -1,7 +1,7 @@
-#define Moteur_pompe 2
-#define Capteur_niveau_haut 23
-#define Relais_securite 21
-#define SIMULATEUR_CONTACTEUR 1
+#define Moteur_pompe 2   // gpio 2 de la led interne sortie de commande du relais
+#define Capteur_niveau_haut 23 // gpio 23 entré niveau haut du capteur de niveau
+#define Relais_securite 21 // gpio 21 entré de declenchement du relais de securité
+#define SIMULATEUR_CONTACTEUR 1  // mettre a 0 car inutile en production
 #if SIMULATEUR_CONTACTEUR
 #define sortieContacteur 16
 #endif
