@@ -20,6 +20,9 @@ This project consists of creating a control system for a lift pump. The aim is t
 - Web interface for displaying the latest pump operations.
 - Safety device to detect any blockage of the high level sensor.
 
+
+<img src="https://github.com/ygueparm/lift_pump/blob/main/schema_pomperelevage.png" alt="pompe relevage " width="500">
+
 ## Components used
 
 - Microcontroller: ESP32
