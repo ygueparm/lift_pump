@@ -116,10 +116,24 @@ htmlContent += "<body>\n";
 
 if (!continuerProgramme || capteurBloque ) {
   htmlContent += "<h2 style=\"font-size: 48px;\">Mise en sécurité de la pompe</h2>\n";
-  htmlContent += "<form method=\"POST\" action=\"/resume-program\">\n";
-  htmlContent += "<button type=\"submit\">Reprendre le programme</button>\n";
-  htmlContent += "</form>\n";
   
+  // Affichage de l'information sur le capteur bloqué
+  if (capteurBloque) {
+    htmlContent += "<p style=\"font-size: 35px;\">Capteur bloqué : OUI</p>\n";
+  } else {
+    htmlContent += "<p style=\"font-size: 35px;\">Capteur bloqué : NON</p>\n";
+  }
+  
+  // Affichage de l'information sur le trop d'alarme
+  if (securiteDeclanche >= MAX_SECURITE) {
+    htmlContent += "<p style=\"font-size: 35px;\">Trop de hors tolérance courant : OUI</p>\n";
+  } else {
+    htmlContent += "<p style=\"font-size: 35px;\">Trop de hors tolérance courant : NON</p>\n";
+  }
+  
+  htmlContent += "<form method=\"POST\" action=\"/resume-program\">\n";
+  htmlContent += "<button type=\"submit\" style=\"font-size: 24px;\">Reprendre le programme</button>\n";
+  htmlContent += "</form>\n";
 }
 
 //suite page accueuil
