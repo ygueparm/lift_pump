@@ -1,10 +1,11 @@
-#define Moteur_pompe 2   // gpio 2 de la led interne sortie de commande du relais
-#define Capteur_niveau_haut 23 // gpio 23 entré niveau haut du capteur de niveau
-#define Relais_securite 21 // gpio 21 entré de declenchement du relais de securité
-#define SIMULATEUR_CONTACTEUR 1  // mettre a 0 car inutile en production
+#define Moteur_pompe 2
+#define Capteur_niveau_haut 23
+#define Relais_securite 21
+#define SIMULATEUR_CONTACTEUR 1
 #if SIMULATEUR_CONTACTEUR
 #define sortieContacteur 16
 #endif
+#define SCRIPT 1
 #define MAX_SECURITE 3
 #define TEMP_FONCTIONNEMENT_MOTEUR_config 2000
 #define TEMP_ATTENTE_SECURITE 10000UL
@@ -27,7 +28,7 @@
 
 const char* ssid     = "Pompe_Relevage";
 const char* password = "sidoniesidoniesidonie";
-const char* apHostname = "pomperelevage"; // Le nom d'hôte que vous souhaitez utiliser
+const char* apHostname = "pompe.com"; // Le nom d'hôte que vous souhaitez utiliser
 
 bool capteurBloque = false;
 bool moteurEnMarche = false;
@@ -55,6 +56,7 @@ volatile bool contacteurDeclenche = false;
 int simulateurContacteur = 0 ; //simulation retour contacteur
 unsigned long tempsReel = 0; // variable du temps reel de fonctionnement
 bool miseAJourEffectuee = false; // indicateur de mise a jout tableau
+bool initialisationVoyant = false;
 
 String contenuTableau; 
 
@@ -77,6 +79,9 @@ Serial.begin(115200);
 
 //page d'accueuil avec le resumé de focntionnement
 
+
+
+
 server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
 String htmlContent = "<!DOCTYPE html>\n";
 htmlContent += "<html>\n";
@@ -84,6 +89,18 @@ htmlContent += "<head>\n";
 htmlContent += "<meta charset=\"UTF-8\">\n"; //  pour l'encodage UTF-8
 htmlContent += "<title>Pompe Relevage résumé</title>\n";
 htmlContent += "<style>\n";
+htmlContent += ".voyant {\n";
+htmlContent += "  width: 100px;\n";
+htmlContent += "  height: 100px;\n";
+htmlContent += "  border-radius: 100%;\n";
+htmlContent += "  margin-left: 300px;\n";
+htmlContent += "}\n";
+htmlContent += ".voyant-eteint {\n";
+htmlContent += "  background-color: gray;\n";
+htmlContent += "}\n";
+htmlContent += ".voyant-vert {\n";
+htmlContent += "  background-color: #00FF00;\n";
+htmlContent += "}\n";
 htmlContent += "label, input {";
 htmlContent += "  display: block;";
 htmlContent += "  margin-bottom: 40px;";
@@ -119,22 +136,23 @@ if (!continuerProgramme || capteurBloque ) {
   
   // Affichage de l'information sur le capteur bloqué
   if (capteurBloque) {
-    htmlContent += "<p style=\"font-size: 35px;\">Capteur bloqué : OUI</p>\n";
+    htmlContent += "<p style=\"font-size: 40px;\">Capteur bloqué : OUI</p>\n";
   } else {
-    htmlContent += "<p style=\"font-size: 35px;\">Capteur bloqué : NON</p>\n";
+    htmlContent += "<p style=\"font-size: 40px;\">Capteur bloqué : NON</p>\n";
   }
   
   // Affichage de l'information sur le trop d'alarme
   if (securiteDeclanche >= MAX_SECURITE) {
-    htmlContent += "<p style=\"font-size: 35px;\">Trop de hors tolérance courant : OUI</p>\n";
+    htmlContent += "<p style=\"font-size: 40px;\">Trop de hors tolérance courant : OUI</p>\n";
   } else {
-    htmlContent += "<p style=\"font-size: 35px;\">Trop de hors tolérance courant : NON</p>\n";
+    htmlContent += "<p style=\"font-size: 40px;\">Trop de hors tolérance courant : NON</p>\n";
   }
   
   htmlContent += "<form method=\"POST\" action=\"/resume-program\">\n";
   htmlContent += "<button type=\"submit\" style=\"font-size: 24px;\">Reprendre le programme</button>\n";
   htmlContent += "</form>\n";
 }
+
 
 //suite page accueuil
 
@@ -183,13 +201,54 @@ for (int i = 0; i < MAX_ENTRIES; i++) {
     }
     indiceAffichage = (indiceAffichage + 1) % MAX_ENTRIES;
 }
+// code pour demarrer manuellement la pompe et l'arreter manuellement
 
-htmlContent += "</table>";
-htmlContent += "</body></html>";
 
+htmlContent += "<div id=\"voyant\" class=\"voyant voyant-eteint\"></div>"; // Voyant initial éteint
+
+htmlContent += "<button type=\"button\" onclick=\"demarrerPompe()\" style=\"width: 300px; height: 200px;\";\">Démarrer la pompe</button>\n";
+htmlContent += "<button type=\"button\" onclick=\"arreterPompe()\" style=\"width: 300px; height: 200px;\"\">Arrêter la pompe</button>\n";
+
+
+
+#if SCRIPT  
+
+htmlContent += "<script>\n";
+htmlContent += "function demarrerPompe() {\n";
+htmlContent += "  document.getElementById(\"voyant\").className = \"voyant voyant-vert\";\n";
+htmlContent += "  envoyerRequete(\"/start-pump\", \"POST\");\n";
+htmlContent += "}\n";
+htmlContent += "function arreterPompe() {\n";
+htmlContent += "  document.getElementById(\"voyant\").className = \"voyant voyant-eteint\";\n";
+htmlContent += "  envoyerRequete(\"/stop-pump\", \"POST\");\n";
+htmlContent += "}\n";
+htmlContent += "function envoyerRequete(url, method) {\n";
+htmlContent += "  var xhr = new XMLHttpRequest();\n";
+htmlContent += "  xhr.open(method, url, true);\n";
+htmlContent += "  xhr.setRequestHeader(\"Content-Type\", \"application/x-www-form-urlencoded\");\n";
+htmlContent += "  xhr.send();\n";
+htmlContent += "}\n";
+htmlContent += "</script>\n";
+
+
+#endif
 
     request->send(200, "text/html", htmlContent);
 });
+
+server.on("/start-pump", HTTP_POST, [](AsyncWebServerRequest *request) {
+    // Code pour démarrer la pompe
+      digitalWrite(Moteur_pompe, HIGH);
+      
+      request->send(200, "text/html", "<script>window.location.replace('/');</script>"); //retour a la page principal
+});
+
+server.on("/stop-pump", HTTP_POST, [](AsyncWebServerRequest *request) {
+    // Code pour arrêter la pompe avec le bouton
+    digitalWrite(Moteur_pompe, LOW);
+    request->send(200, "text/html", "<script>window.location.replace('/');</script>");   //retour a la page principal
+});
+
 
 //partie pour modifier le temps de fcontionnement de la pompe en secondes
 server.on("/set-time", HTTP_GET, [](AsyncWebServerRequest *request){
@@ -228,14 +287,16 @@ server.on("/resume-program", HTTP_POST, [](AsyncWebServerRequest *request){
   responseContent += "<meta charset=\"UTF-8\">\n";
   responseContent += "</head>\n";
   responseContent += "<body>\n";
-  responseContent += "<p>Programme repris !</p>\n";
-  responseContent += "<p><a href=\"/\">Retour</a></p>\n"; // Ajout du lien de retour
+  responseContent += "<p style=\"font-size: 24px;\">Programme repris !</p>\n";
+  responseContent += "<p style=\"font-size: 24px;\"><a href=\"/\">Retour</a></p>\n"; // Ajout du lien de retour
   responseContent += "</body></html>";
   
   request->send(200, "text/html", responseContent);
 });
 ;
-    server.begin();
+
+//lancement du serveur
+server.begin();
 
     
   
