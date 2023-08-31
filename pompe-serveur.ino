@@ -28,7 +28,7 @@
 
 const char* ssid     = "Pompe_Relevage";
 const char* password = "sidoniesidoniesidonie";
-const char* apHostname = "pompe.com"; // Le nom d'hôte que vous souhaitez utiliser
+const char* apHostname = "pompe1.com"; // Le nom d'hôte que vous souhaitez utiliser
 
 bool capteurBloque = false;
 bool moteurEnMarche = false;
@@ -177,8 +177,12 @@ htmlContent += "<table>";
 htmlContent += "<caption></caption>";
 htmlContent += "<tr><th>Indice</th><th>Temps marche réel</th><th>intervale démarrage</th></tr>";
 
-int indiceAffichage = indiceDerniereEntree;
-int numeroIncrement = indiceDerniereEntreeTempsReel;
+// int indiceAffichage = indiceDerniereEntree;
+// int numeroIncrement = indiceDerniereEntreeTempsReel;
+
+int indiceAffichage = indiceDerniereEntreeTempsDepuis; // Utilisez l'indice des temps depuis le dernier démarrage
+int numeroIncrement = 1; // Commencez à compter à partir de 1
+
 
 for (int i = 0; i < MAX_ENTRIES; i++) {
     if (tempsReelDeFonctionnement[indiceAffichage] > 0 || tempsDepuisDernierDemarrage[indiceAffichage] > 0) {
@@ -195,8 +199,8 @@ for (int i = 0; i < MAX_ENTRIES; i++) {
     
         htmlContent += "</tr>";
         numeroIncrement++;
-        if (numeroIncrement > MAX_ENTRIES) {
-            numeroIncrement = 1;
+        if (numeroIncrement >= MAX_ENTRIES) {
+            numeroIncrement = 0;
         }
     }
     indiceAffichage = (indiceAffichage + 1) % MAX_ENTRIES;
