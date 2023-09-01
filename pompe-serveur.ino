@@ -306,7 +306,7 @@ void setup() {
 
 
   pinMode(Moteur_pompe, OUTPUT);
-  pinMode(Capteur_niveau_haut, INPUT);
+  pinMode(Capteur_niveau_haut, INPUT_PULLUP);
   pinMode(Relais_securite, INPUT_PULLUP);
   pinMode(capteurContacteur, INPUT_PULLUP); //pour calculer le temps de contact du contacteur
 
