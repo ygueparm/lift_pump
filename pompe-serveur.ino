@@ -18,7 +18,8 @@
 #define MAX_STRING_LENGTH 100
 #define capteurContacteur 4
 
-
+#define TEST   // laisser pour les test sur planche a pain
+// #undef TEST // a activer pour la  production
 
 #include <WiFi.h>
 #include <DNSServer.h>
@@ -28,7 +29,7 @@
 // initialisation serveur AP
 
 const char* ssid     = "Pompe_Relevage";
-const char* password = "your_strong_password;
+const char* password = "sidoniesidoniesidonie";
 const char* apHostname = "pompe1.com"; // Le nom d'hôte que vous souhaitez utiliser
 
 bool capteurBloque = false;
@@ -217,7 +218,6 @@ void setup() {
 
 
 #if SCRIPT
-
     htmlContent += "<script>\n";
     htmlContent += "function demarrerPompe() {\n";
     htmlContent += "  document.getElementById(\"voyant\").className = \"voyant voyant-vert\";\n";
@@ -234,8 +234,6 @@ void setup() {
     htmlContent += "  xhr.send();\n";
     htmlContent += "}\n";
     htmlContent += "</script>\n";
-
-
 #endif
 
     request->send(200, "text/html", htmlContent);
@@ -304,11 +302,24 @@ void setup() {
   server.begin();
 
 
+#ifdef TEST
 
   pinMode(Moteur_pompe, OUTPUT);
-  pinMode(Capteur_niveau_haut, INPUT_PULLUP);
-  pinMode(Relais_securite, INPUT_PULLUP);
-  pinMode(capteurContacteur, INPUT_PULLUP); //pour calculer le temps de contact du contacteur
+  pinMode(Capteur_niveau_haut, INPUT_PULLDOWN); // 
+  pinMode(Relais_securite, INPUT_PULLUP); // 
+  pinMode(capteurContacteur, INPUT_PULLUP); //pour calculer le temps de contact du contacteur 
+
+#endif 
+
+#ifndef TEST
+
+  pinMode(Moteur_pompe, OUTPUT);
+  pinMode(Capteur_niveau_haut, INPUT_PULLDOWN); // 
+  pinMode(Relais_securite, INPUT_PULLDOWN); // 
+  pinMode(capteurContacteur, INPUT_PULLDOWN); //pour calculer le temps de contact du contacteur 
+
+#endif
+
 
 #if SIMULATEUR_CONTACTEUR
   pinMode(sortieContacteur, OUTPUT);
