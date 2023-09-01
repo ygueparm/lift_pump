@@ -28,7 +28,7 @@
 // initialisation serveur AP
 
 const char* ssid     = "Pompe_Relevage";
-const char* password = "sidoniesidoniesidonie";
+const char* password = "your_strong_password;
 const char* apHostname = "pompe1.com"; // Le nom d'hôte que vous souhaitez utiliser
 
 bool capteurBloque = false;
