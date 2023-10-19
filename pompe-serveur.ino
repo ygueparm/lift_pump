@@ -1,4 +1,4 @@
-#define Moteur_pompe 2
+#define Moteur_pompe 22
 #define Capteur_niveau_haut 23
 #define Relais_securite 21
 #define SIMULATEUR_CONTACTEUR 1
@@ -29,8 +29,8 @@
 // initialisation serveur AP
 
 const char* ssid     = "Pompe_Relevage";
-const char* password = "sidoniesidoniesidonie";
-const char* apHostname = "pompe1.com"; // Le nom d'hôte que vous souhaitez utiliser
+const char* password = "123546789";
+const char* apHostname = "www.pompe1.com"; // Le nom d'hôte que vous souhaitez utiliser
 
 bool capteurBloque = false;
 bool moteurEnMarche = false;
