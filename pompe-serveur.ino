@@ -17,9 +17,10 @@
 #define MAX_ENTRIES 20
 #define MAX_STRING_LENGTH 100
 #define capteurContacteur 4
+#define Led 2
 
-#define TEST   // laisser pour les test sur planche a pain
-// #undef TEST // a activer pour la  production
+//#define TEST   // laisser pour les test sur planche a pain
+#undef TEST // a activer pour la  production
 
 #include <WiFi.h>
 #include <DNSServer.h>
@@ -29,7 +30,7 @@
 // initialisation serveur AP
 
 const char* ssid     = "Pompe_Relevage";
-const char* password = "123546789";
+const char* password = "123456789";
 const char* apHostname = "www.pompe1.com"; // Le nom d'hôte que vous souhaitez utiliser
 
 bool capteurBloque = false;
@@ -241,14 +242,14 @@ void setup() {
 
   server.on("/start-pump", HTTP_POST, [](AsyncWebServerRequest * request) {
     // Code pour démarrer la pompe
-    digitalWrite(Moteur_pompe, HIGH);
+    digitalWrite(Moteur_pompe, LOW);
 
     request->send(200, "text/html", "<script>window.location.replace('/');</script>"); //retour a la page principal
   });
 
   server.on("/stop-pump", HTTP_POST, [](AsyncWebServerRequest * request) {
     // Code pour arrêter la pompe avec le bouton
-    digitalWrite(Moteur_pompe, LOW);
+    digitalWrite(Moteur_pompe, HIGH);
     request->send(200, "text/html", "<script>window.location.replace('/');</script>");   //retour a la page principal
   });
 
@@ -329,7 +330,7 @@ void setup() {
   moteurEnMarche = false;
   securiteDeclanche = 0;
   continuerProgramme = true; // Initialise la variable de contrôle
-
+  pinMode(Led, OUTPUT);
 
 
 
@@ -344,7 +345,7 @@ void loop() {
   if (!continuerProgramme || capteurBloque) {
     //on s'assure que le moteur est coupé
 
-    digitalWrite(Moteur_pompe, LOW);
+    digitalWrite(Moteur_pompe, HIGH);
     return;
   }
 
@@ -369,8 +370,8 @@ void loop() {
     if (!moteurEnMarche) {
       moteurEnMarche = true;
 
-      digitalWrite(Moteur_pompe, HIGH);
-
+      digitalWrite(Moteur_pompe, LOW);
+      digitalWrite(Led, HIGH);
 #if SIMULATEUR_CONTACTEUR
       digitalWrite(sortieContacteur, HIGH);
 #endif
@@ -389,8 +390,8 @@ void loop() {
 
       // gestion securité lorsque le moteur fonctionne
       if (etatRelaisSecurite == HIGH) {
-        digitalWrite(Moteur_pompe, LOW);
-
+        digitalWrite(Moteur_pompe, HIGH);
+        digitalWrite(Led, LOW);
 
 #if SIMULATEUR_CONTACTEUR
         digitalWrite(sortieContacteur, LOW);
@@ -410,7 +411,8 @@ void loop() {
       else if (tempsActuel - tempsDebut >= TEMP_FONCTIONNEMENT_MOTEUR ) {
         moteurEnMarche = false;
 
-        digitalWrite(Moteur_pompe, LOW);
+        digitalWrite(Moteur_pompe, HIGH);
+        digitalWrite(Led, LOW);
 
 #if SIMULATEUR_CONTACTEUR
         digitalWrite(sortieContacteur, LOW);
