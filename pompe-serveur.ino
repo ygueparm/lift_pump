@@ -243,13 +243,14 @@ void setup() {
   server.on("/start-pump", HTTP_POST, [](AsyncWebServerRequest * request) {
     // Code pour démarrer la pompe
     digitalWrite(Moteur_pompe, LOW);
-
+    digitalWrite(Led, HIGH);
     request->send(200, "text/html", "<script>window.location.replace('/');</script>"); //retour a la page principal
   });
 
   server.on("/stop-pump", HTTP_POST, [](AsyncWebServerRequest * request) {
     // Code pour arrêter la pompe avec le bouton
     digitalWrite(Moteur_pompe, HIGH);
+    digitalWrite(Led, LOW);
     request->send(200, "text/html", "<script>window.location.replace('/');</script>");   //retour a la page principal
   });
 
@@ -332,7 +333,7 @@ void setup() {
   continuerProgramme = true; // Initialise la variable de contrôle
   pinMode(Led, OUTPUT);
 
-
+digitalWrite(Moteur_pompe, HIGH); //initialisation du moteur a l'arret
 
 }
 
@@ -496,7 +497,7 @@ void loop() {
       contacteurDeclenche = true;
     } else if (etatContacteur == LOW && contacteurDeclenche) {
       tempsFinReel = millis();
-    tempsReel = tempsFinReel - tempsDebutReel;
+  //  tempsReel = tempsFinReel - tempsDebutReel;
 
       tempsReel = (tempsFinReel - tempsDebutReel) / 1000; // Conversion en secondes
 
