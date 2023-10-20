@@ -178,26 +178,26 @@ void setup() {
     htmlContent += "<h2>Temps depuis le dernier<br> fonctionnement : " + String(joursDepuisDernier) + "j " + String(heuresDepuisDernier) + "h " + String(minutesDepuisDernier) + "m</h2>";
     htmlContent += "<table>";
     htmlContent += "<caption></caption>";
-    htmlContent += "<tr><th>Indice</th><th>Temps marche réel</th><th>intervale démarrage</th></tr>";
+    htmlContent += "<tr><th>Indice</th><th>intervale démarrage</th></tr>";
 
-    // int indiceAffichage = indiceDerniereEntree;
-    // int numeroIncrement = indiceDerniereEntreeTempsReel;
-
-    int indiceAffichage = indiceDerniereEntreeTempsDepuis; // Utilisez l'indice des temps depuis le dernier démarrage
+   // int indiceAffichage = indiceDerniereEntreeTempsDepuis; // Utilisez l'indice des temps depuis le dernier démarrage
     int numeroIncrement = 1; // Commencez à compter à partir de 1
-
+    int indiceAffichage = 0; // Initialisez indiceAffichage à zéro
 
     for (int i = 0; i < MAX_ENTRIES; i++) {
-      if (tempsReelDeFonctionnement[indiceAffichage] > 0 || tempsDepuisDernierDemarrage[indiceAffichage] > 0) {
+      if ( tempsDepuisDernierDemarrage[indiceAffichage] > 0) {
         htmlContent += "<tr>";
         htmlContent += "<td>" + String(i) + "</td>"; // Ajoutez l'indice au début de la ligne
         // Ajoutez ici les colonnes pour le temps de fonctionnement réel et le temps depuis le dernier démarrage
-        htmlContent += "<td>" + String(tempsReelDeFonctionnement[indiceAffichage]) + " secondes</td>\n";
+      //  htmlContent += "<td> secondes</td>\n";
 
         unsigned long joursAffichage = tempsDepuisDernierDemarrage[indiceAffichage] / JOUR;
         unsigned long heuresAffichage = (tempsDepuisDernierDemarrage[indiceAffichage] % JOUR) / HEURE;
         unsigned long minutesAffichage = ((tempsDepuisDernierDemarrage[indiceAffichage] % JOUR) % HEURE) / MINUTE;
-
+        
+          Serial.print("indiceAffichage :");
+          Serial.println(indiceAffichage);
+          
         htmlContent += "<td>" + String(joursAffichage) + "j " + String(heuresAffichage) + ":" + (minutesAffichage < 10 ? "0" : "") + String(minutesAffichage) + "</td>\n";
 
         htmlContent += "</tr>";
@@ -454,10 +454,10 @@ void loop() {
           // Mise à jour des indices pour chaque tableau
 
           indiceDerniereEntreeTempsDepuis = (indiceDerniereEntreeTempsDepuis + 1) % MAX_ENTRIES;
-          indiceDerniereEntreeTempsReel = (indiceDerniereEntreeTempsReel + 1) % MAX_ENTRIES;
+         
 
-          Serial.print("indiceDerniereEntreeTempsReeltemps reel de fonctionnement :");
-          Serial.println(indiceDerniereEntreeTempsReel);
+     //     Serial.print("indiceDerniereEntreeTempsReeltemps reel de fonctionnement :");
+     //     Serial.println(indiceDerniereEntreeTempsReel);
           Serial.print("indiceDerniereEntreeTempsDepuis temps depuisdernier demarrage : ");
           Serial.println(indiceDerniereEntreeTempsDepuis);
 
@@ -506,8 +506,13 @@ void loop() {
       Serial.println(" secondes  ");
 
       // Met à jour le temps réel dans la même entrée du tableau
-      tempsReelDeFonctionnement[indiceDerniereEntreeTempsReel] = tempsReel;
-
+     //   tempsReelDeFonctionnement[indiceDerniereEntreeTempsReel] = tempsReel;
+       // Met à jour l'indice pour pointer vers la prochaine entrée, en s'assurant que l'indice reste dans les limites du tableau
+       // indiceDerniereEntreeTempsReel = (indiceDerniereEntreeTempsReel + 1) % MAX_ENTRIES;
+    
+        //    Serial.print("indiceDerniereEntreeTempsReeltemps reel de fonctionnement :");
+        //  Serial.println(indiceDerniereEntreeTempsReel);
+          
       miseAJourEffectuee = true; //valide la mise a jour du tableau
       contacteurDeclenche = false;
     }
