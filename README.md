@@ -1,3 +1,8 @@
+## ⚠️ Projet archivé
+Ce code a été remplacé
+Conservez pour historique / référence matérielle / schémas anciens.
+
+
 # Lift Pump - Summary of Operation
 en francais à la fin
 
